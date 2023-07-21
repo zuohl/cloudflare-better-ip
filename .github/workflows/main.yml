@@ -58,6 +58,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          git config --global user.email "action@lxxself.com"
+          git config --global user.name "ActionBot"
           git add .
           git commit -m "Update country files"
           git push
