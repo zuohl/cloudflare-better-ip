@@ -39,30 +39,21 @@ jobs:
           echo "[Error] Due to a change in the workflow file of the upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork. Please refer to the detailed tutorial for instructions: https://github.com/Yidadaa/ChatGPT-Next-Web#enable-automatic-updates"
           exit 1
 
-      - name: Process files
+      - name: Process country files
         run: |
-          folder_list=(cloudflare cloudfront)
+          bash shell/make_country.sh
 
-          for folder in ${folder_list[@]}; do
-            folder_country="${folder}_country"
-            rm -rf $folder_country
-            mkdir -p $folder_country
-            for file in $folder/*.txt; do
-              while IFS= read -r line; do
-                country=$(echo "$line" | awk -F"|" '{print $3}' | awk '{$1=$1};1')
-                # echo "$country"
-                echo "$line" >> "$folder_country/$country.txt"
-              done < "$file"
-            done
-          done
+      - name: make json file for html
+        run: |
+          bash shell/to_json.sh
 
       - name: Commit and push changes
         #uses: stefanzweifel/git-auto-commit-action@v4
         #with:
         #  commit_message: generate auto
         run: |
-           git config --global user.email "action@lxxself.com"
-           git config --global user.name "ActionBot"
-           git add .
-           git commit -m "Update country files"
-           git push
+          git config --global user.email "action@lxxself.com"
+          git config --global user.name "ActionBot"
+          git add .
+          git commit -m "Update country files"
+          git push
