@@ -15,6 +15,10 @@ for folder in ${folder_list[@]}; do
     # 遍历每个文件
     for file in $files
     do
+        if [[ "$file" == "TOP100.txt" ]]; then
+            # 如果是，则跳过当前循环
+            continue
+        fi  
         # 获取文件名对应的国家代码
         countryCode=$(echo "$file" | cut -d "." -f 1)
         # 按latency排序并提取前十个
