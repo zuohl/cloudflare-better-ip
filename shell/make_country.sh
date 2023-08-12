@@ -41,7 +41,7 @@ for folder in ${folder_list[@]}; do
     line="${line/|  |/| ${codes_array[count]} |}"
     # echo "$line"
     if [ $count -ne 0 ]; then
-      output+="\n"
+      output+=$'\n'
     fi
     output+="$line"
     count=$((count + 1))
