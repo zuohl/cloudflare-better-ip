@@ -32,27 +32,16 @@ jobs:
           # Set test_mode true to run tests instead of the true action!!
           test_mode: false
 
-      - name: Sync check
-        if: failure()
-        run: |
-          echo "[Error] 由于上游仓库的 workflow 文件变更，导致 GitHub 自动暂停了本次自动更新，你需要手动 Sync Fork 一次，详细教程请查看：https://github.com/Yidadaa/ChatGPT-Next-Web/blob/main/README_CN.md#%E6%89%93%E5%BC%80%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0"
-          echo "[Error] Due to a change in the workflow file of the upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork. Please refer to the detailed tutorial for instructions: https://github.com/Yidadaa/ChatGPT-Next-Web#enable-automatic-updates"
-          exit 1
+      - name: No new commits
+        if: steps.sync.outputs.has_new_commits == 'false'
+        run: echo "New commits were found to sync."
 
       - name: Process country files
+        if: steps.sync.outputs.has_new_commits == 'true'
         run: |
           bash shell/make_country.sh
-
-      - name: make json file for html
-        run: |
           bash shell/to_json.sh
-
-      - name: Commit and push changes
-        #uses: stefanzweifel/git-auto-commit-action@v4
-        #with:
-        #  commit_message: generate auto
-        run: |
-          git config --global user.email "action@lxxself.com"
+          git config --global user.email "xx@xx.com"
           git config --global user.name "ActionBot"
           git add .
           git commit -m "Update country files"
